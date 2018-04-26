@@ -9,7 +9,11 @@ import './Blog.css'
 class Blog extends Component {
     state = {
         posts: [],
-        selectedPostId: null
+        selectedPostId: null,
+        error: false
+    }
+    postSelectedHandler = (id) => {
+        this.setState({selectedPostId: id})
     }
 
     componentDidMount() {
@@ -25,20 +29,24 @@ class Blog extends Component {
                 this.setState({posts: updatePosts})
                 // console.log(response)
             })
-    }
-
-    postSelectedHandler= (id) => {
-        this.setState({selectedPostId: id})
+            .catch(error => {
+                // console.log(error)
+                this.setState({error: true})
+            })
     }
 
     render() {
-        const posts = this.state.posts.map(post => {
-            return <Post key={post.id}
-                         title={post.title} a
-                         uthor={post.author}
-                         clicked={() => this.postSelectedHandler(post.id)}
-            />
-        })
+        let posts = <p style={{textAlign: 'center'}}>Something went wrong!</p>
+        if (!this.state.error) {
+            posts = this.state.posts.map(post => {
+                return <Post
+                    key={post.id}
+                    title={post.title} a
+                    uthor={post.author}
+                    clicked={() => this.postSelectedHandler(post.id)}
+                />
+            })
+        }
 
         return (
             <div>
@@ -56,4 +64,5 @@ class Blog extends Component {
     }
 }
 
-export default Blog;
+
+export default Blog
